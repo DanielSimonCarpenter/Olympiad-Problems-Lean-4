@@ -4,5 +4,5 @@ MyProject.lean
 MyProject/
 lake-manifest.json
 lakefile.lean
-lean-toolchain/build
+lean-toolchain
 /lake-packages/*
