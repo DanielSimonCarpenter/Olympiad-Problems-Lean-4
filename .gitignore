@@ -1,0 +1,8 @@
+.DS_Store
+.lake/
+MyProject.lean
+MyProject/
+lake-manifest.json
+lakefile.lean
+lean-toolchain/build
+/lake-packages/*
