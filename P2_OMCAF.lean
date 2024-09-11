@@ -2,19 +2,22 @@ import MIL.Common
 import Mathlib
 
 variable (c d e: ℝ)
+variable {G : Type*} [Group G]
+set_option maxRecDepth 2000000
 
+def nonzero_reals_mul_group (x:ℝ):=
+ x≠0
 open Real
-namespace tactic.ring_exp
 
 def is_irrational (x : ℝ) : Prop := ¬ ∃ (q : ℚ), (q : ℝ) = x
 
-theorem irrational_exponents (a : ℝ) (h : is_irrational a) : ¬ (∃ r1 r2 : ℚ, a^17 = r1 ∧ a^19 = r2) := by
+theorem irrational_exponents (a : ℝ) (h : is_irrational a) (nozero : a≠0): ¬ (∃ r1 r2 : ℚ, a^17 = r1 ∧ a^19 = r2) := by
   by_contra h1
   rcases h1 with ⟨r1, r2, h17, h19⟩
   have idk: (a^17)^9=a^153 :=by
-    norm_num
+    rw [← pow_mul]
   have idk2: (a^19)^8=a^152 :=by
-    norm_num
+    rw[← pow_mul]
   have h3 : ∃ r3 : ℚ, a^153 = r3:=by
     use r1^9
     rw[← idk]
@@ -30,6 +33,14 @@ theorem irrational_exponents (a : ℝ) (h : is_irrational a) : ¬ (∃ r1 r2 : �
   rcases h4 with ⟨r4, h4⟩
   have h5 : a = r3 / r4:=by
     rw[← h3, ← h4]
-    rw [h3, h4, ←div_eq_mul_inv, ←pow_sub]
-    norm_num
-  exact h (rational_iff_rat.mp ⟨r3, r4, h5⟩),
+    have h: a^153 / a^152 = a^(153 - 152):=by
+      rw[div_eq_mul_inv]
+      refine Eq.symm (pow_sub₀ a ?ha ?hb)
+      exact nozero
+      linarith
+    rw[h]
+    simp
+  have h6: ∃ x:ℚ, a=x:=by
+    use a^153/a^152
+
+  exact h (rational_iff_rat.mp ⟨r3, r4, h5⟩)
