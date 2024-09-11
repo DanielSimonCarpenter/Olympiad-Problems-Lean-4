@@ -20,14 +20,11 @@ theorem irrational_exponents (a : ℝ) (h : is_irrational a) (nozero : a≠0): �
     rw[← pow_mul]
   have h3 : ∃ r3 : ℚ, a^153 = r3:=by
     use r1^9
-    rw[← idk]
-    rw[h17]
+    rw[← idk, h17]
     exact Eq.symm (Rat.cast_pow r1 9)
-
   have h4 : ∃ r4 : ℚ, a^152 = r4:=by
     use r2^8
-    rw[← idk2]
-    rw[h19]
+    rw[← idk2, h19]
     exact Eq.symm (Rat.cast_pow r2 8)
   rcases h3 with ⟨r3, h3⟩
   rcases h4 with ⟨r4, h4⟩
@@ -40,7 +37,12 @@ theorem irrational_exponents (a : ℝ) (h : is_irrational a) (nozero : a≠0): �
       linarith
     rw[h]
     simp
-  have h6: ∃ x:ℚ, a=x:=by
-    use a^153/a^152
-
-  exact h (rational_iff_rat.mp ⟨r3, r4, h5⟩)
+  have h6: ∃ x:ℚ, x=a:=by
+    use r3/r4
+    simp
+    symm
+    exact h5
+  rcases h6 with ⟨r5, h7⟩
+  have h_contradiction: ∃ (q : ℚ), q=a:=by
+    use r5
+  exact h h_contradiction
